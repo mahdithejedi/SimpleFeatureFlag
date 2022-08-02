@@ -16,5 +16,6 @@ class PartialRule(_BaseRule):
 class MinimumRule(_BaseRule):
     pass
 
+
 class MinimumPartialRule(_BaseRule):
     pass
