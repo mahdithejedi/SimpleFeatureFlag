@@ -1,5 +1,6 @@
-from datetime import datetime
 from django.db import models
+from datetime import datetime
+
 from .Rules.FeatureFules import (
     GlobalRule, PartialRule,
     MinimumRule, MinimumPartialRule
@@ -22,42 +23,65 @@ class TimestampedModel(models.Model):
         ordering = ['-created_at', '-updated_at']
 
 
-class Functions(TimestampedModel):
-    name = models.CharField(
-        max_length=250
-    )
-    version = models.CharField(
-        max_length=120,
-        null=True,
-        blank=True
-    )
-
-
-class Rule(TimestampedModel):
+class Feature(TimestampedModel):
+    _rules_classes = {
+        'Global': GlobalRule,
+        'Partial': PartialRule,
+        'Minimum': MinimumRule,
+        'MinimumPartial': MinimumPartialRule
+    }
     class RuleChoices(models.TextChoices):
-        Global = GlobalRule
-        Partial = PartialRule
-        Minimum = MinimumRule
-        MinimumPartial = MinimumPartialRule
+        Global = 'Global'
+        Partial = 'Partial'
+        Minimum = 'Minimum'
+        MinimumPartial = 'MinimumPartial'
 
-    name = models.CharField(
+    rule = models.CharField(
         max_length=120,
         choices=RuleChoices.choices,
         default=RuleChoices.Global
     )
-    Function = models.ForeignKey(
-        to=Functions,
-        null=True,
-        on_delete=models.SET_NULL,
-        related_name='rule'
+    name = models.CharField(
+        max_length=250
     )
+    major_version = models.PositiveSmallIntegerField(
+        null=True, blank=True, db_index=True
+    )
+    minor_version = models.PositiveSmallIntegerField(
+        null=True, blank=True
+    )
+    patches = models.PositiveSmallIntegerField(
+        null=True, blank=True
+    )
+
+    class Meta:
+        indexes = [
+            models.Index(
+                fields=[
+                    'major_version', 'minor_version'
+                ]
+            ),
+            models.Index(
+                fields=[
+                    'major_version', 'minor_version', 'patches'
+                ]
+            )
+        ]
+
+    @property
+    def rule_class(self):
+        return self._rules_classes[
+            self.name
+        ]
 
 
 class User(TimestampedModel):
     # although we have pk for User
     # we should specify user_id which interact with API Gateway
-    user_id = models.IntegerField(null=False, blank=False)
+    user_id = models.IntegerField(null=False, blank=False,
+                                  db_index=True, unique=True)
     rule = models.ForeignKey(
-        to=Rule,
-        on_delete=models.CASCADE
+        to=Feature,
+        on_delete=models.CASCADE,
+        related_name='user_function'
     )
