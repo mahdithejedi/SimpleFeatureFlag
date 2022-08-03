@@ -1,11 +1,14 @@
 from django.urls import path, include
 from rest_framework import routers
 
-from .views import FeatureViewSet, get_rule_names
+from .views import FeatureViewSet, UserViewSet, get_rule_names
 
 router = routers.DefaultRouter()
 router.register(
     'feature', FeatureViewSet
+)
+router.register(
+    'user', UserViewSet
 )
 
 urlpatterns = [

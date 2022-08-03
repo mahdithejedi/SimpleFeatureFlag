@@ -30,6 +30,7 @@ class Feature(TimestampedModel):
         'Minimum': MinimumRule,
         'MinimumPartial': MinimumPartialRule
     }
+
     class RuleChoices(models.TextChoices):
         Global = 'Global'
         Partial = 'Partial'
@@ -70,9 +71,14 @@ class Feature(TimestampedModel):
 
     @property
     def rule_class(self):
-        return self._rules_classes[
+        return self.all_rule_cls[
             self.name
         ]
+
+    @staticmethod
+    @property
+    def all_rule_cls():
+        return Feature._rules_classes
 
 
 class User(TimestampedModel):
@@ -85,3 +91,7 @@ class User(TimestampedModel):
         on_delete=models.CASCADE,
         related_name='user_function'
     )
+
+    @property
+    def get_rule_classes(self):
+        return Feature.all_rule_cls.values()
