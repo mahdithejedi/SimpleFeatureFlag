@@ -23,8 +23,6 @@ class UserViewSet(ModelViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         manager = RuleManager(
-            self.model,
-            self.get_queryset(),
             serializer.data['user_id'],
             serializer.data['version']
         )

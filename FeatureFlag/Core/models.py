@@ -1,7 +1,7 @@
 from django.db import models
 from datetime import datetime
 
-from .Rules.FeatureFules import (
+from .Rules.FeatureRules import (
     GlobalRule, PartialRule,
     MinimumRule, MinimumPartialRule
 )
@@ -43,7 +43,7 @@ class Feature(TimestampedModel):
         default=RuleChoices.Global
     )
     name = models.CharField(
-        max_length=250
+        max_length=250, unique=True
     )
     major_version = models.PositiveSmallIntegerField(
         null=True, blank=True, db_index=True
@@ -92,6 +92,7 @@ class User(TimestampedModel):
         related_name='user_function'
     )
 
+    @staticmethod
     @property
-    def get_rule_classes(self):
+    def get_rule_classes():
         return Feature.all_rule_cls.values()
