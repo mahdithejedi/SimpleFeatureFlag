@@ -13,7 +13,8 @@ class RuleManager:
         Q_queryset = Q()
         for cls in self._user.get_rule_classes():
             rule_cls = cls(self._feature, self._user, self._user_id, self._version)
-            Q_queryset |= rule_cls.get_features()
+            if _q := rule_cls.get_features():
+                Q_queryset |= _q
         return self.__response(
             Q_queryset
         )

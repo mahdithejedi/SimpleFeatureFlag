@@ -72,6 +72,7 @@ class UserSerializer(serializers.ModelSerializer):
             'invalid': _("version should be in the format of Number.Number.Number")
         }
     )
+    user_id = serializers.IntegerField()
 
     class Meta:
         model = User

@@ -4,6 +4,14 @@ from time import mktime
 from django.db.models import Q
 
 
+def _get_remainder_hash(user, user_id):
+    user, _ = user.objects.get_or_create(user_id=user_id)
+    unix_time = mktime(user.created_at.timetuple())
+    return int(hash(
+        f'{user_id}#{unix_time}'
+    ) % 100)
+
+
 class _BaseRule(ABC):
     def __init__(self, feature, user, user_id, version):
         self._feature = feature
@@ -23,16 +31,8 @@ class GlobalRule(_BaseRule):
 
 
 class PartialRule(_BaseRule):
-    @staticmethod
-    def __get_remainder_hash(user, user_id):
-        user, _ = user.objects.get_or_create(user_id=user_id)
-        unix_time = mktime(user.created_at.timetuple())
-        return int(hash(
-            f'{user_id}#{unix_time}'
-        ) % 100)
-
     def get_features(self):
-        partial_percent = self.__get_remainder_hash(self._user, self._user_id)
+        partial_percent = _get_remainder_hash(self._user, self._user_id)
         return Q(
             percent__gte=partial_percent, rule=self._feature.RuleChoices.Partial
         )
@@ -42,6 +42,7 @@ class MinimumRule(_BaseRule):
     def get_features(self):
         major_version, minor_version, patches = self._version.split('.')
         Q_rule = partial(
+            Q,
             rule=self._feature.RuleChoices.Partial
         )
         return \
