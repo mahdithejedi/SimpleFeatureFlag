@@ -43,12 +43,12 @@ class MinimumRule(_BaseRule):
         major_version, minor_version, patches = self._version.split('.')
         Q_rule = partial(
             Q,
-            rule=self._feature.RuleChoices.Partial
+            rule=self._feature.RuleChoices.Minimum
         )
         return \
             Q(Q_rule(major_version__gt=major_version) |
-           Q_rule(major_version=major_version, minor_version__gt=minor_version) |
-           Q_rule(major_version=major_version, minor_version=minor_version, patches__gte=patches))
+              Q_rule(major_version=major_version, minor_version__gt=minor_version) |
+              Q_rule(major_version=major_version, minor_version=minor_version, patches__gte=patches))
 
 
 class MinimumPartialRule(_BaseRule):
