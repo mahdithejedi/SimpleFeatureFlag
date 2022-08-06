@@ -53,7 +53,15 @@ class MinimumRule(_BaseRule):
 
 class MinimumPartialRule(_BaseRule):
     def get_features(self):
-        Q(rule=self._feature.RuleChoices.MinimumPartial) & Q(
-            MinimumRule.get_features(self) &
-            PartialRule.get_features(self)
+        major_version, minor_version, patches = self._version.split('.')
+        return Q(
+            Q(percent__gte=_get_remainder_hash(
+                self._user, self._user_id)
+            ) &
+            Q(Q(major_version__gt=major_version) |
+              Q(major_version=major_version, minor_version__gt=minor_version) |
+              Q(major_version=major_version, minor_version=minor_version, patches__gte=patches)) &
+            Q(
+                rule=self._feature.RuleChoices.MinimumPartial
+            )
         )
