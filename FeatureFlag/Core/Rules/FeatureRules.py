@@ -1,5 +1,6 @@
 from abc import ABC
 from functools import partial
+from hashlib import sha256
 from time import mktime
 from django.db.models import Q
 
@@ -7,9 +8,8 @@ from django.db.models import Q
 def _get_remainder_hash(user, user_id):
     user, _ = user.objects.get_or_create(user_id=user_id)
     unix_time = mktime(user.created_at.timetuple())
-    return int(hash(
-        f'{user_id}#{unix_time}'
-    ) % 100)
+    hash_value = sha256(f'{user_id}#{unix_time}'.encode('utf-8')).hexdigest()
+    return int(int(hash_value, 16) % 100)
 
 
 class _BaseRule(ABC):
