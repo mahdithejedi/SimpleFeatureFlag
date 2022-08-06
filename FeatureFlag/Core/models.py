@@ -42,6 +42,9 @@ class Feature(TimestampedModel):
         choices=RuleChoices.choices,
         default=RuleChoices.Global
     )
+    percent = models.PositiveSmallIntegerField(
+        null=True, blank=True
+    )
     name = models.CharField(
         max_length=250, unique=True
     )
@@ -85,11 +88,6 @@ class User(TimestampedModel):
     # we should specify user_id which interact with API Gateway
     user_id = models.IntegerField(null=False, blank=False,
                                   db_index=True, unique=True)
-    rule = models.ForeignKey(
-        to=Feature,
-        on_delete=models.CASCADE,
-        related_name='user_function'
-    )
 
     @staticmethod
     def get_rule_classes():
