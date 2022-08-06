@@ -223,3 +223,14 @@ get list of features
 ### Error Response
 **Code** : `404 Not Found`
 
+
+# Add Rule
+Add rule is so easy, 
+  * First: thing you should do is override a class from `_BaseRule`  and implement `get_features` function
+, you should return a Django `Q` instance
+  * Second: add your class with a name inside `Feature` model `_rules_classes` attribute
+  * Third: add your rule name into `RuleChoices` class
+
+:smiley:
+
+**_Done =)_**
