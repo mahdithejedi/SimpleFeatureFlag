@@ -28,8 +28,8 @@ class MinimumRule(_BaseRule):
     def get_features(self):
         major_version, minor_version, patches = self._version.split('.')
         return \
-            Q(Q(major_version__gte=major_version) |
-             Q(major_version=major_version, minor_version__gte=minor_version) |
+            Q(Q(major_version__gt=major_version) |
+             Q(major_version=major_version, minor_version__gt=minor_version) |
              Q(major_version=major_version, minor_version=minor_version, patches__gte=patches))
 
 

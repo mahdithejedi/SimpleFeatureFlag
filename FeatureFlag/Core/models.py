@@ -76,7 +76,6 @@ class Feature(TimestampedModel):
         ]
 
     @staticmethod
-    @property
     def all_rule_cls():
         return Feature._rules_classes
 
@@ -93,6 +92,5 @@ class User(TimestampedModel):
     )
 
     @staticmethod
-    @property
     def get_rule_classes():
-        return Feature.all_rule_cls.values()
+        return Feature.all_rule_cls().values()

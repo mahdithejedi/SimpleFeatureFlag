@@ -11,7 +11,7 @@ class RuleManager:
 
     def get_features(self):
         Q_queryset = Q()
-        for cls in self._user.get_rule_classes:
+        for cls in self._user.get_rule_classes():
             rule_cls = cls(self._feature, self._user, self._user_id, self._version)
             Q_queryset |= rule_cls.get_features()
         return self.__response(
