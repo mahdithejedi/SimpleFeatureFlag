@@ -43,7 +43,7 @@ class FeatureSerializer(serializers.ModelSerializer):
         elif rule == Feature.RuleChoices.MinimumPartial:
             version = attrs.pop('version')
             attrs['major_version'], attrs['minor_version'], attrs['patches'] = version.split('.')
-
+        attrs.pop("version", None)
         return super().validate(attrs)
 
     def to_representation(self, instance):
