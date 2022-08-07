@@ -46,7 +46,7 @@ Add Rule for Feature
 fields:
 
   * Rule : Can be on of _Global,Minimum,Partial,MinimumPartial_ \*
-  * Name: A Unique for your Rule \*
+  * Name: A Unique name for your Rule \*
   * version: Your Feature version \**
   * percent: specifies the percentage of users this feature should be enabled for \***
 
@@ -147,81 +147,20 @@ Get specific feature
 ```
 
 
-## Get One Feature
+## Completely Update One Feature
 
-get a single feature
+Update A whole Rule
 
 **URL** : `/V1/feature/<PK>`
 
-**Method** : `GET`
+**Method** : `PUT`
 
 **Auth required** : No
+Everything is same as  `CREATE`
 
+## Patch a Feature
 
-### Success Responses
-
-**Code** : `200 OK`
-
-```json
-[
-  {
-    "pk": 14,
-    "rule": "Partial",
-    "name": "PartialTest",
-    "version": "..",
-    "percent": 20
-  },
-  {
-    "pk": 15,
-    "rule": "Minimum",
-    "name": "Version1.0.2",
-    "version": "1..2",
-    "percent": null
-  }
-]
-```
-
-[//]: # (## update Specific Features)
-
-[//]: # ()
-[//]: # (Get specific feature)
-
-[//]: # ()
-[//]: # (**URL** : `/V1/feature/<PK>`)
-
-[//]: # ()
-[//]: # (**Method** : `PATCH`)
-
-[//]: # ()
-[//]: # (**Auth required** : No)
-
-[//]: # ()
-[//]: # ()
-[//]: # (### Success Responses)
-
-[//]: # ()
-[//]: # (**Code** : `200 OK`)
-
-[//]: # ()
-[//]: # (```json)
-
-[//]: # ({)
-
-[//]: # (  "pk": 14,)
-
-[//]: # (  "rule": "Partial",)
-
-[//]: # (  "name": "PartialTest",)
-
-[//]: # (  "version": "..",)
-
-[//]: # (  "percent": 20)
-
-[//]: # (})
-
-[//]: # (```)
-
-
+<small> :construction: under development :construction: </small>
 
 ## Delete a Feature
 
@@ -241,14 +180,107 @@ Delete a single Feature
 ### Error Response
 **Code** : `404 Not Found`
 
+# Rule
+## Get Current Rules
 
-# Add Rule
+get list of rule names
+
+**URL** : `/V1/rule/`
+
+**Method** : `GET`
+
+**Auth required** : No
+
+
+### Success Responses
+
+**Code** : `200 OK`
+
+```json
+{
+  "rules": [
+    "Global",
+    "Partial",
+    "Minimum",
+    "MinimumPartial"
+  ]
+}
+```
+*Point:Only __`GET`__ method is allowed for rule*
+
+## Add Rule
 Add rule is so easy, 
-  * First: thing you should do is override a class from `_BaseRule`  and implement `get_features` function
-, you should return a Django `Q` instance
+  * First: thing you should do is to override a class from `_BaseRule` and implement `get_features` function
+, you should return a Django [`Q`](https://docs.djangoproject.com/en/4.1/ref/models/querysets/#django.db.models.Q) instance
   * Second: add your class with a name inside `Feature` model `_rules_classes` attribute
   * Third: add your rule name into `RuleChoices` class
 
 :smiley:
 
 **_Done =)_**
+
+# Manage users
+## Send New User
+
+Send new user and get list available features
+
+**URL** : `/V1/user/`
+
+**Method** : `POST`
+
+**Auth required** : No
+
+
+**Data constraints**
+
+```json
+{
+  "user_id": 12,
+  "version": "Integer.Integer.Integer"
+}
+```
+fields:
+
+* user_id : id of user \*
+* version: required feature version \*
+
+*: This field is necessary
+
+
+### Success Responses
+
+**Code** : `200 OK`
+
+
+```json
+{
+  "functions": [
+    "Global1",
+    "Global2",
+    "Version1.2.3",
+    "Version2.1.3",
+    "MinimumTest3"
+  ]
+}
+```
+
+### Error Response
+
+**Condition** : If provided data is invalid, e.g. rule with duplicated name.
+
+**Code** : `400 BAD REQUEST`
+
+**Content example** :
+
+```json
+{
+  "user_id": [
+    "A valid integer is required."
+  ],
+  "version": [
+    "version should be in the format of Number.Number.Number"
+  ]
+}
+```
+*Point:Only __`POST`__ method is allowed for user*
+

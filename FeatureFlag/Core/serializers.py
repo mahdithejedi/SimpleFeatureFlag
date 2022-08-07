@@ -64,7 +64,7 @@ class UserFeatureSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     version = serializers.RegexField(
-        r'(\d\.){2}\d',
+        r'^(\d+\.){2}\d+$',
         allow_null=True,
         required=False,
         error_messages={
