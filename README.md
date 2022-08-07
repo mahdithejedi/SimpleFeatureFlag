@@ -7,15 +7,18 @@ A brief explanation of the architecture
 As the code shows, I don't use complicated architecture. I use a simple microkernel architecture in which you have a core that manages CRUD and Rules [manager.py](FeatureFlag/Core/Rules/manager.py) and a file to which you add rules. This way, you can easily add, remove and manage your rules without facing unnecessary complexities.
 We have Four Rules:
 
-  * Global: It's just a simple query in which you just inquiry for rules that their type is `Global`
+  * ***Global***: It's just a simple query in which you just inquiry for rules that their type is `Global`
 
-  * Minimum: You have a version that can be split into Major, Minor, and Patch. You have to split the string format of the version into Three separate columns in the DB and use indexing to optimize your queries. (Although there are different other possible ways to tackle this problem, this way is the most simple and memory-efficient way)
+
+  * ***Minimum***: You have a version that can be split into Major, Minor, and Patch. You have to split the string format of the version into Three separate columns in the DB and use indexing to optimize your queries. (Although there are different other possible ways to tackle this problem, this way is the most simple and memory-efficient way)
   
-  * Partial Rule: For this rule, I've used an algorithm to active/directive a feature for the user instead of saving which feature is active for which user in DB.
+
+  * ***Partial Rule***: For this rule, I've used an algorithm to active/directive a feature for the user instead of saving which feature is active for which user in DB.
 You can make a hash of user_id and then count the remainder of 100.
 For example consider a user_id = 12. You get sha256 of 12, which is 48542053925442562206970678378617219313498267117402160926478466274825158240536, then get the remainder of it of 100 which is 36. Now you make a DB query asking for active features for 36 percent of users or more. But this method has a problem. What if user_id of users is like this -> 12, 24, 36, etc. Consider you have a Feature that should be active for 30 percent of users. Users with user_id -> 12, 24, 36,4 are requested for a feature. Users with user_id -> 12, 24, 36 are more likely to be in 30 percent who see the features, and user_id=4 is more probable to be in 70 percent who can't see the feature. So for adding more randomness, we save the first time the user_id is requested and get the hash of (user_id#unix time of the first time the user requested). **This way will also ensure that if a feature is active for a user, it will be active for the user in all requests.**
 
-  * MinimumeRule: As our architecture is a microkernel and each rule is independent, we can combine two Minimum and Partial rules without extra time for choosing a new algorithm or new logic. We combine their queries and make a new rule =).
+
+  * ***MinimumRule***: As our architecture is a microkernel and each rule is independent, we can combine two Minimum and Partial rules without extra time for choosing a new algorithm or new logic. We combine their queries and make a new rule =).
 
 # Set Rule for Feature
 
@@ -144,9 +147,9 @@ Get specific feature
 ```
 
 
-## Get Current Features
+## Get One Feature
 
-get list of features
+get a single feature
 
 **URL** : `/V1/feature/<PK>`
 
@@ -220,9 +223,9 @@ get list of features
 
 
 
-## Get Current Features
+## Delete a Feature
 
-get list of features
+Delete a single Feature
 
 **URL** : `/V1/feature/<PK>`
 
