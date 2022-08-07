@@ -6,8 +6,7 @@ from .models import Feature, User
 
 class FeatureSerializer(serializers.ModelSerializer):
     version = serializers.RegexField(
-        # todo change regex, don't support 12.14.15
-        r'(\d\.){2}\d',
+        r'^(\d+\.){2}\d+$',
         allow_null=True,
         required=False,
         error_messages={
