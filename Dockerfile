@@ -2,8 +2,11 @@ FROM python:3.9
 
 RUN apt update && apt install build-essential -y --no-install-recommends
 
-WORKDIR /code/
-COPY . /code/
-EXPOSE $port
+RUN export $(cat ./.env | xargs )
 
-CMD ["make", "production"]
+WORKDIR /code/
+EXPOSE $port
+COPY . /code/
+
+CMD ["/bin/bash", "run.sh"]
+

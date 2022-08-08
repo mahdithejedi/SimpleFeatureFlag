@@ -7,7 +7,7 @@ from django.db.models import Q
 
 def _get_remainder_hash(user, user_id):
     user, _ = user.objects.get_or_create(user_id=user_id)
-    unix_time = mktime(user.created_at.timetuple())
+    unix_time = mktime(user.created_at.tismetuple())
     hash_value = sha256(f'{user_id}#{unix_time}'.encode('utf-8')).hexdigest()
     return int(int(hash_value, 16) % 100)
 
