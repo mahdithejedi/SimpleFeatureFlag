@@ -284,3 +284,10 @@ fields:
 ```
 *Point:Only __`POST`__ method is allowed for user*
 
+
+# ToDo
+ToDo list for next release:
+ * [] Add patch request for feature
+ * [] Partial algorithm does not work properly for percentage under 5 percent AND more than 95 percent(5> && 95<)
+ * [] Nginx Config does not read from .env file
+
