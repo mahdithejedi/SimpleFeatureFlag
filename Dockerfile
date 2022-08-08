@@ -6,4 +6,4 @@ WORKDIR /code/
 COPY . /code/
 EXPOSE $port
 
-CMD ['make', 'production']
+CMD ["make", "production"]

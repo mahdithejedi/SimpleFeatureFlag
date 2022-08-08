@@ -11,6 +11,7 @@ export_env_file:
 	export $(xargs < $(env_file_location) )
 
 install_requirement:
+	pip install --upgrade pip
 	pip install -r $(requirement_file)
 
 migrate_db:
