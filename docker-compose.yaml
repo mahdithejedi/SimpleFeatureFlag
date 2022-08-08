@@ -30,6 +30,8 @@ services:
       - 8000:80
     volumes:
       - ./config/:/etc/nginx/conf.d
+    env_file:
+      - .env
     networks:
       - nginx_network
     depends_on:
